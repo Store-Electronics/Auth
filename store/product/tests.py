@@ -18,22 +18,28 @@ class ProductTests(APITestCase):
         self.product_data = {
             "name": "Phone",
             "price": 100,
+            "price_business": 80,
             "stock": 1,
             "brand": "Apple",
             "model": "Iphone 11"
         }
 
         self.admin_user = User.objects.create_user(username="admin", email="admin@admin.com", password="admin", is_admin=True)
-        self.user = User.objects.create_user(username="user", email="user@user.com", password="user")
+        self.business_user = User.objects.create_user(username="business", email="business@business.com", password="business", is_business=True)
+        self.user = User.objects.create_user(username="user", email="user@user.com", password="user", is_business=True)
 
         refresh = RefreshToken.for_user(self.admin_user)
         self.admin_access_token = str(refresh.access_token)
+
+        refresh_business = RefreshToken.for_user(self.business_user)
+        self.business_access_token = str(refresh_business.access_token)
 
         refresh_regular = RefreshToken.for_user(self.user)
         self.regular_access_token = str(refresh_regular.access_token)
 
         self.product = Product.objects.create(**self.product_data)
 
+    # --- READ ---
     def test_get_all_products(self):
         response = self.client.get(self.product_list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -62,6 +68,7 @@ class ProductTests(APITestCase):
         new_product = {
             "name": "New Phone",
             "price": 100,
+            "price_business": 80,
             "stock": 1,
             "brand": "Bear",
             "model": "BearPhone"
@@ -76,6 +83,7 @@ class ProductTests(APITestCase):
         new_product = {
             "name": "New Phone",
             "price": 100,
+            "price_business": 80,
             "stock": 1,
             "brand": "Bear",
             "model": "BearPhone"
@@ -90,6 +98,7 @@ class ProductTests(APITestCase):
         new_product = {
             "name": "New Phone",
             "price": 100,
+            "price_business": 80,
             "stock": -1,
             "brand": "Bear",
             "model": "BearPhone"

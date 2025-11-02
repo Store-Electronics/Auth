@@ -11,7 +11,7 @@ from .serializers import ProductSerializer
 class ProductListView(APIView):
     def get(self, request):
         products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True)
+        serializer = ProductSerializer(products, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
@@ -26,7 +26,7 @@ class ProductListView(APIView):
 class ProductDetailView(APIView):
     def get(self, request, id):
         product = get_object_or_404(Product, id=id)
-        serializer = ProductSerializer(product)
+        serializer = ProductSerializer(product, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, id):
