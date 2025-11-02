@@ -14,6 +14,7 @@ class ProductListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        # TODO Only admin can create a product
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -27,6 +28,7 @@ class ProductDetailView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, id):
+        # TODO Only admin can edit a product
         product = get_object_or_404(Product, id=id)
         serializer = ProductSerializer(product, data=request.data, partial=True)
         if serializer.is_valid():
@@ -35,6 +37,7 @@ class ProductDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
+        # TODO Only admin can delete a product
         product = get_object_or_404(Product, id=id)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
